@@ -1,0 +1,113 @@
+
+#paper-html-elements {
+    position: relative;
+    border: 1px solid gray;
+    display: inline-block;
+    background: transparent;
+    overflow: hidden;
+}
+
+#paper-html-elements svg {
+    background: transparent;
+}
+
+#paper-html-elements svg .link {
+    z-index: 2;
+}
+svg circle{
+    cursor: pointer;
+}
+
+.connection-wrap, .connection { pointer-events: none; }
+.link-tools { display: none; }
+
+
+.html-element {
+    position: absolute;
+    background: black;
+    /* Make sure events are propagated to the JointJS element so, e.g. dragging works.
+    pointer-events: none;
+    -webkit-user-select: none;*/
+    border-radius: 15px;
+    /*border: 2px solid #2980B9;*/
+    box-shadow: inset 0 0 3px black, 2px 2px 1px gray;
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 2;
+    
+}
+.leaf{
+    border-radius: 0px;
+}
+/* for context menu diable and enable option lasses*/
+.disableMenuItem{
+    pointer-events: none;
+    cursor: not-allowed;
+    color: grey;
+}
+.enableMenuItem{
+    pointer-events: all;
+    cursor: pointer;
+    color: black;
+}
+
+.html-element input,
+.html-element button {
+    /* Enable interacting with inputs only. */
+    pointer-events: auto;
+}
+
+
+
+.toggle_children{
+    font-size: 7px;
+    color:black;
+    cursor: pointer;
+   top:8px;
+   left: 7px;
+   position: absolute;
+  
+}
+.toggle_children:hover{
+   
+    color: white;
+    
+}
+/*input box styling*/
+/* body {text-align:center; padding:20px} */
+.html-element input {
+    background-color: transparent;
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+    width: auto;
+    font-family: serif;
+    min-width: 30px;
+  /* width:150px;*/
+   /* border:1px solid;*/
+    color: #333;
+    padding: 07px;
+    height: 20px;
+    /*z-index: 100;*/
+    text-align: left;
+    border: none;
+     /* min-width:50px!important;
+    max-width:99.99%!important;
+    transition: width 0.25s;
+    text-align:center; 
+    /*text-align: left;*/
+    
+    
+}
+.html-element input:focus{
+    outline:none;
+}
+.link-tools .tool-remove { display: none }
+/*/ for bootstrap*/
+body { padding: 040px; }
+.dropdown-toggle, .dropdown-menu { width: 300px }
+.btn-group img { margin-right: 10px }
+.dropdown-toggle { padding-right: 50px }
+.dropdown-toggle .glyphicon { margin-left: 20px; margin-right: -40px }
+.dropdown-menu>li>a:hover { background: #f1f9fd } /* $search-blue */
+.dropdown-header { background: #ccc; font-size: 14px; font-weight: 700; padding-top: 5px; padding-bottom: 5px; margin-top: 10px; margin-bottom: 5px }

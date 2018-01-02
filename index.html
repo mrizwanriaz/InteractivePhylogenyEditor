@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
+    <link rel="stylesheet" href="css/styleforv_21.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+    <link rel="stylesheet" href="Auto_complete/jquery-ui.theme.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/ /1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/jquery.contextMenu.js"></script>
+    <script src="js/jquery.ui.position.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/graphlib.js"></script>
+    <script src="js/dagre.js"></script>
+    <script src="js/notify.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/newick.js"></script>
+
+    <title></title>
+
+
+
+
+    <script src="js/lodash.js"></script>
+    <script src="js/backbone.js"></script>
+    <script src="js/joint.js"></script>
+
+</head>
+
+<body>
+
+
+
+
+    <div class="form-horizontal">
+        <div class="form-group" id="newickbox_id">
+            <label for="inputType" class="col-sm-2 control-label">Please enter phylogeny:</label>
+            <div class="col-sm-5">
+                <input type="text" placeholder="newick format" class="form-control" id="newick"></input>
+            </div>
+            <div class="col-sm-1">
+                <button onclick="generateGraphFromNewick();" class=" btn btn-primary col-sm-offset-4">Generate Tree</button>
+               
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+        
+        <div class="btn-group col-sm-offset-10">
+          <button type="button" onclick="saveTreeAsNewick();" class="btn btn-success">save</button>
+          <button type="button" onclick="reset();" class="btn btn-danger">reset</button>
+        </div>
+      </div>
+           
+    
+   
+   
+    <div id="paper-html-elements"></div>
+    <script type="text/javascript">
+        var selNode = null;
+
+        
+
+        /***************************** context menu******************************/
+        $(function () {         
+     
+            
+
+
+            $("#paper-html-elements").contextMenu({
+                selector: '.html-element',
+                
+                
+                items: {
+                    "addLabel": {
+                        name: "Add label",
+                        icon: "fa-edit", //icon for add Label
+                        callback: function (itemKey, opt, rootMenu, originalEvent, e) {
+                            $(selNode).find("input").val("");
+                            $(selNode).find("input").show();
+                            //console.log(rootMenu);
+                            
+                            var currentcell =graph.getCell($(selNode).attr("model-id"));
+                            console.log(opt,"dasffdfd");
+                            $("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-label","true");
+                           // resizable($(selNode).find("input"),7);
+                        }
+                    }, //addLabel end
+                    "hideName": {
+                        name: "Remove label",
+                        icon: "fa-eye-slash", //icon for hide input box
+                        callback: function (itemKey, opt, rootMenu, originalEvent, e) {
+                            $(selNode).find("input").val("");
+                            $(selNode).find("input").hide();
+                            var currentcell =graph.getCell($(selNode).attr("model-id"));
+                            $("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-label","false");
+                            
+                        }
+
+                    },//hideLabel end                    
+
+                    "delChildren": {
+                        name: "Remove children",
+                        icon: "fa-times", //icon for remove children
+                        callback: function (itemKey, opt, rootMenu, originalEvent, e) {
+                           
+                            //function to remove children
+                            var currentcell =graph.getCell($(selNode).attr("model-id"));
+                            //calling function
+                           removeChildren(currentcell);
+                            
+                            
+                        } ///call back function end
+                    }, //del children ends
+                },//items end
+                events: {
+                    show: function (options) {
+                        selNode = this;
+                        // Add class to the menu
+                        //getting current cell 
+                        var currentcell =graph.getCell($(selNode).attr("model-id"));
+
+                        console.log($("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-children"));
+                        //if node has not children then disable remove children option
+                        if($("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-children") != "true"){
+                            $("li.fa-times").removeClass("enableMenuItem").addClass("disableMenuItem");
+                          
+                            //if a node has already label then disable add-label option and enable hide-label option 
+                            if($("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-label") == "true"){
+                            $("li.fa-edit").removeClass("enableMenuItem").addClass("disableMenuItem");
+                            $("li.fa-eye-slash").removeClass("disableMenuItem").addClass("enableMenuItem");
+
+                            }
+                            //if a nodes have not labeled then enable add-label option and disable hide-label option
+                            else{
+                                $("li.fa-edit").removeClass("disableMenuItem").addClass("enableMenuItem");
+                                $("li.fa-eye-slash").removeClass("enableMenuItem").addClass("disableMenuItem");
+                            }
+                            
+                           
+                            
+                        }
+                        //if a nodes have children then enable add-label option and also disable add and hide-label option
+                        else{
+                            $("li").removeClass("disableMenuItem").addClass("enableMenuItem");
+                            $("li.fa-edit").removeClass("enableMenuItem").addClass("disableMenuItem");
+                            $("li.fa-eye-slash").removeClass("enableMenuItem").addClass("disableMenuItem");
+                            }
+                                        
+                        console.log(options,"hiii");
+                        
+                        
+                    }
+                    
+                }//events end
+            });//context menu end
+           
+        });//function end
+
+        /*********** organism names binding *********************/
+        var availableTags=[];
+        getOrganismFromDatabase();
+
+        var graph = new joint.dia.Graph;
+
+        var paper = new joint.dia.Paper({
+            el: $('#paper-html-elements'),
+            width: 1200,
+            height: 1200,
+            model: graph,
+            gridSize: 1,
+            background: {
+                color: 'lightgrey'
+            },
+            perpendicularLinks: true,
+
+        });
+
+        var selectedCellView = null;
+        var radCircleParent = 80;
+        var a = 280;
+        var L = 0;
+
+        (function () {
+
+
+            // Create a custom element.
+            // ------------------------
+
+            joint.shapes.html = {};
+            joint.shapes.html.Element = joint.shapes.basic.Circle.extend({
+                defaults: joint.util.deepSupplement({
+                        type: 'html.Element',
+                        attrs: {
+                            circle: {
+                                fill: '',
+                                stroke: '',
+                                'fill-opacity': 1
+                            }
+                        }
+                    },
+                    joint.shapes.basic.Circle.prototype.defaults)
+            });
+
+
+            // Create a custom view for that element that displays an HTML div above it.
+            // -------------------------------------------------------------------------
+
+            joint.shapes.html.ElementView = joint.dia.ElementView.extend({
+
+                template: [
+                    '<div class="html-element" >',
+                   
+                    '<i class="fa childrenToggleButton fa-plus toggle_children" aria-hidden="true"></i>',
+                   
+                     '<input type="text" style="display:none;"  placeholder="Search..." class="tags" />',
+                    '</div>'
+                    
+                ].join(''),
+                
+
+                initialize: function () {
+                    _.bindAll(this, 'updateBox');
+                    joint.dia.ElementView.prototype.initialize.apply(this, arguments);
+                    //console.log(this.$box);
+                    
+
+                    this.$box = $(_.template(this.template)());
+                    // console.log(this.$box);
+                    this.$box.attr("model-id", this.model.id);
+
+                    this.$box.on('click',function(e){
+                        //get cell view
+                        var cellView=graph.getCell($(e.currentTarget).attr("model-id"));
+                        console.log("you clicked on",cellView);
+                        
+                        //call addNewChildrenFunction
+                    });
+                   
+                    this.$box.find('input').on("keydown",function(){
+                       //call function to resize input box
+                       //console.log($(this).css("width"));
+                       var width = ($(this).val().length+1) * 7;
+                       
+
+                       $(this).css("width",(width > 70 ? width : 70) + 'px');
+                    });
+
+                    // Prevent paper from handling pointerdown.
+                    this.$box.find('input').on('mousedown click', function (evt) {
+                        evt.stopPropagation();
+                    });
+                    // This is an example of reacting on the input change and storing the input data in the cell model.
+                    this.$box.find('input').on('change', _.bind(function (evt) {
+                       this.model.set('input', $(evt.target).val());
+                    }, this));
+                    
+                    //Adding model-id to input  box
+                    this.$box.find('input').attr("model-id", this.model.id);
+                    //Adding model id to <i> element
+                    this.$box.find('i').attr("model-id",this.model.id);
+
+
+                   
+
+
+                    // Update the box position whenever the underlying model changes.
+                    this.model.on('change', this.updateBox, this);
+                    // Remove the box when the model gets removed from the graph.
+                    this.model.on('remove', this.removeBox, this);
+                    
+                    //adding auto-complete property to input-box
+                    this.$box.find('input').autocomplete({
+                        //source: availableTags,
+                        delay: 0,
+                        source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(availableTags, request.term);
+
+                            response(results.slice(0, 10));
+                        },
+                        //to get id of organism by slicing
+                        select: function (event, ui) {
+                            // show ID for organism
+                            //var start = ui.item.value.search(":")
+                            //$(this).val(ui.item.value.slice(start + 1, ui.item.value.length));
+                            //L=ui.item.value.slice(start+1,-1);
+                            // $(this).val(ui.item.value.slice(start+1,-1));
+
+                        }
+                        
+
+                    });
+
+
+
+                    this.updateBox();
+                   
+                },
+                render: function () {
+                    joint.dia.ElementView.prototype.render.apply(this, arguments);
+                    this.paper.$el.prepend(this.$box);
+                    this.updateBox();
+                    return this;
+                },
+                updateBox: function () {
+                    // Set the position and dimension of the box so that it covers the JointJS element.
+                    var bbox = this.model.getBBox();
+                    // Example of updating the HTML with a data stored in the cell model.
+                    this.$box.find('label').text(this.model.get('label'));
+                    this.$box.find('span').text(this.model.get('select'));
+                    this.$box.css({
+                        width: bbox.width,
+                        height: bbox.height,
+                        left: bbox.x,
+                        top: bbox.y,
+                        transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)'
+                    });
+                },
+                removeBox: function (evt) {
+                    this.$box.remove();
+                }
+                
+            });
+            
+        
+           
+
+            // Create JointJS elements and add them to the graph as usual.
+            // -----------------------------------------------------------
+            // adding a intial node function call
+            intialNodes();
+           
+           
+
+            // cell click event
+            paper.on('cell:pointerclick', function (cellView, evt) {
+                
+                //if it is not button then return false
+                if ($(evt.target).hasClass("childrenToggleButton") == false) {
+                    return false;
+                }
+
+                //if this node is root then return
+               if ($("#" + cellView.id).find("circle").attr('root') == "true")
+                    return false;
+
+
+
+                if ($("#" + cellView.id).find("circle").attr('has-children') == "true") {
+                    //nodes has children and click again to remove children
+                    var currentcell =graph.getCell(cellView.model.id);
+                     removeChildren(currentcell);
+                     return ;
+                }
+               
+                   
+                
+                //confirmation of adding children and removing input-box
+                if ($("#" + cellView.id).find("circle").attr('root') != "true" && $('input[model-id='+cellView.model.id+']').css("display") != "none") { // because we do not want to ask user on the root node
+
+                    bootbox.confirm({
+                        message: "If you add children nodes, label of this node will be removed. Continue anyway?",
+                        buttons: {
+                            confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                //hide its label                              
+                                $('input[model-id='+cellView.model.id+']').hide();
+                                
+                                //add children nodes
+                                createChildren(cellView);
+                                
+                            } else {
+                                return;
+                            }
+                        }
+                    }); // end of confirmation box
+                }//confirmation block if statement end
+                 else {
+                    createChildren(cellView);
+                }
+
+                
+
+            }); // pointer click to add children END
+
+
+
+        }());
+
+
+        function createChildren(cellView) {
+
+            selectedCellView = cellView;
+            console.log(cellView.model.id);
+            addNewChildrens(cellView);
+
+            //nodes has children then remove plus and add minus 
+            $('i[model-id='+cellView.model.id+']').removeClass("fa-plus").addClass("fa-minus");
+
+            // if node is not leaf node then remove leaf class
+            $("div[model-id="+cellView.model.id+"]").removeClass("leaf");
+              }//create children funtion end
+    </script>
+
+
+
+
+
+</body>
+
+</html>
