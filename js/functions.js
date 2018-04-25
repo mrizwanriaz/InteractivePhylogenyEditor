@@ -24,11 +24,11 @@ function generateGraphFromNewick() {
 
   //count left braces
   var leftBraces = n.split("(").length - 1;
-  console.log("count are ( :", leftBraces);
+  console.log("count of ( :", leftBraces);
 
   //count right braces
   var rightBraces = n.split(")").length - 1;
-  console.log("count are ) :", rightBraces);
+  console.log("count of ) :", rightBraces);
   // var letterNumber = /^[0-9a-zA-Z]+$/; 
 
   if (leftBraces == rightBraces) {
@@ -58,21 +58,21 @@ function generateGraphFromNewick() {
         }, "error");
         graph.resetCells();
         $(".html-element").remove();
-        return;
-      }
+        return; 
+      } 
 
       addNewGraphFromNewick();
       var s=graph.getSources();
       console.log("sources are:",s.length);
       var sources=s.length;
-      if (sources>1) {
+       if (sources>1) {
         $("#newick").notify("invalid phylogeny! Sources is greater then 1", {
           position: "top center"
         }, "error");
         graph.resetCells();
         $(".html-element").remove();
         return;
-      }
+      } 
       
     } //try braces end
     catch (err) {
@@ -82,9 +82,9 @@ function generateGraphFromNewick() {
       graph.resetCells();
       $(".html-element").remove();
       return;
-    } //catch braces end
+    } //catch function end
 
-  } // if statement(for braces validation) bracket end  
+  } // if statement(for small bracket validation in newick input) bracket end  
   else {
     $("#newick").notify("invalid phylogeny (braces misssing) !", {
       position: "top center"
@@ -95,8 +95,9 @@ function generateGraphFromNewick() {
   }
   //to clear the text box after all validation
   $("#newick").val("");
-} //generateGraphFromNewick function brackets end
+} //generateGraphFromNewick function end
 
+/************************************End of generate graph from newick******************************************************** */
 
 function buildNewickNodes(node, callback) {
 
@@ -143,6 +144,8 @@ function drawNode(x1, y1, childName, h, w) {
   return cell;
 }
 
+/**************************end of draw_node function***************************** */
+
 // draw children function
 function addNewChildrens(selectedCellView) {
   console.log(selectedCellView);
@@ -181,9 +184,6 @@ function addNewChildrens(selectedCellView) {
 
   }); //link1 braces end
 
-
-
-
   graph.addCells([link, link1]);
   console.log(c1);
   $("div[model-id=" + c1.id + "]").addClass("leaf");
@@ -193,20 +193,17 @@ function addNewChildrens(selectedCellView) {
 
   $("#" + selectedCellView.id).find("circle").attr('has-children', true);
 
-
-
-
-
-
-
   //set layout
   joint.layout.DirectedGraph.layout(graph, {
     setLinkVertices: true,
+    
     rankDir: 'LR',
     marginX: '20',
     marginY: '313'
   });
 }
+
+/*******************************end of addNewchildren************************ */
 
 // draw children function
 function addNewGraphFromNewick() {
@@ -250,6 +247,10 @@ function addNewGraphFromNewick() {
     if (node.branchset != undefined) {
       $("#" + (paper.findViewByModel(c.id)).id).find("circle").attr('has-children', true);
     }
+    else{
+      $("#" + (paper.findViewByModel(c.id)).id).find("circle").attr('has-children', false);
+
+    }
 
   });
 
@@ -276,7 +277,6 @@ function addNewGraphFromNewick() {
       });
 
       graph.addCells([link1, link2]);
-      //console.log(graph.getsources(),"ddfdf");
 
       //if branchset is not undefined then means present node has children so add minus and remove plus
       $("i[model-id=" + node.name + "]").removeClass("fa-plus").addClass("fa-minus");
@@ -286,20 +286,18 @@ function addNewGraphFromNewick() {
     }
   });
 
-
-
   //set layout
   joint.layout.DirectedGraph.layout(graph, {
     setLinkVertices: true,
     rankDir: 'LR',
     marginX: '20',
-    marginY: '290'
+    marginY: '219'
   });
   
 
 } //addNewGraphFromNewick function end
 
-
+/*****************************end of addNewGraphFromNewick function*********************** */
 
 //generate random string 
 function makeid(n) {
@@ -341,7 +339,7 @@ function removeChildren(currentcell) {
           successors[iterator].remove();
 
         }
-        //console.log("helo",paper.findViewByModel(currentcell));
+
 
         //to set has-children false after removing its child nodes
         $("#" + paper.findViewByModel(currentcell).id).find("circle").attr("has-children", "false");
@@ -363,7 +361,7 @@ function intialNodes() {
   var rootnode = new joint.shapes.basic.Circle({
     position: {
       x: 20,
-      y: 350
+      y: 313
     },
     size: {
       width: root_node_diameter,
@@ -374,7 +372,7 @@ function intialNodes() {
         text: ''
       },
       circle: {
-        fill: 'black',
+        fill: 'lightgray',
         hasChildren: true,
         root: true,
         hasLabel: false
@@ -471,100 +469,113 @@ function getOrganismFromDatabase() {
 
 function saveTreeAsNewick() {
   var rootNode = graph.getSources()[0];
-  console.log(rootNode);
+  console.log("root",rootNode);
   var graphLibStructure = graph.toGraphLib();
-  //console.log(rootNode);
-  // if(rootNode.attr("root") == "true" && rootNode.attr("has-children") == "true")
-  // {
-  //   console.log("rooot");
-  // }
+ 
+  
   var l = graph.getSuccessors(rootNode);
   var c = graphlib.alg.postorder(graphLibStructure, rootNode.id);
+  
+ 
 
-
-  console.log(c);
-
-
-  //if($("#" + (paper.findViewByModel(c[6]).id)).find("circle").attr("root") == "true" 
-  //&& $("#" + (paper.findViewByModel(c[6]).id)).find("circle").attr("root") == "true")
-  // {
-  //  console.log("hello child");
-  // }
   var opening="(";
   var n = c.length;
+  console.log("total nodes are : ",n);
   var newick="";
   for (var i = 0; i < n; i++) {
     if (i < n - 1) {
       var nodeName = $("input[model-id=" + c[i] + "]").val();
+      
 
-      // if(nodeName == undefined)
-      //  continue;
-
-      //if the current and it's next node has not children
+      //if the current and it's next (right child) node has not children
       if ($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("has-children") != "true" &&
         $("#" + (paper.findViewByModel(c[i + 1]).id)).find("circle").attr("has-children") != "true") {
-        //console.log("1");  
+        
         newick = newick + "(" + nodeName + ",";
+        
       } 
       //when current node has no children but it's next node has children
       else if ($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("has-children") != "true" &&
         $("#" + (paper.findViewByModel(c[i + 1]).id)).find("circle").attr("has-children") == "true") {
-        console.log("2"); 
-        newick = newick + nodeName + ")";
+           
+        newick = newick + nodeName;
         
-        //if current node has not children but predecessor and successor has children
-       if($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("has-children") != "true" 
-      && $("#" + (paper.findViewByModel(c[i+1]).id)).find("circle").attr("has-children") == "true" 
-      && $("#" + (paper.findViewByModel(c[i-1]).id)).find("circle").attr("has-children") == "true")
-      {
-      console.log("5"); 
-      //insert opening bracket at start
-      newick=opening.concat(newick);
-      }
       }
       //when the current node has children but it's next and previous has not children
       else if ($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("has-children") == "true" &&
-        $("#" + (paper.findViewByModel(c[i + 1]).id)).find("circle").attr("has-children") != "true" &&
-        $("#" + (paper.findViewByModel(c[i - 1]).id)).find("circle").attr("has-children") != "true" ) {
-        newick = newick + ",";
+        $("#" + (paper.findViewByModel(c[i + 1]).id)).find("circle").attr("has-children") != "true" )
         
+        {
+          
+        newick = newick + ")" + nodeName + ",";
+        
+        var pre = graphlib.alg.preorder(graphLibStructure,c[i]);
+       
+        
+        
+          if ($("#" + (paper.findViewByModel(pre[1]).id)).find("circle").attr("has-children") == "true")
+          {
+            var d = graphlib.alg.postorder(graphLibStructure,c[i]);
+            var nodeNameD = $("input[model-id=" + d[0] + "]").val();
+            console.log("first left child is : " ,nodeNameD);
+              op=newick.split(nodeNameD);
+              console.log(op[0]);
+              console.log(op[1]); 
+              
+             
+              newick=op[0] + "(" + nodeNameD.concat(op[1]);
+          }
+          
       }
 
 
-      
-
-     // when two internal nodes are selected
+    
+     // when the current node is parent and it,s next selected node is also parent
       else if($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("has-children") == "true" 
-      && $("#" + (paper.findViewByModel(c[i+1]).id)).find("circle").attr("has-children") == "true"
-      && $("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("root") != "true" 
-      && $("#" + (paper.findViewByModel(c[i+1]).id)).find("circle").attr("root") != "true" &&
-      $("#" + (paper.findViewByModel(c[i+2]).id)).find("circle").attr("root") != "true")
+      && $("#" + (paper.findViewByModel(c[i+1]).id)).find("circle").attr("has-children") == "true")
       {
-      console.log("6"); 
-       newick=newick+nodeName+"),";
-       //insert opening bracket at start
-       newick=opening.concat(newick);
-       //newick[u].unshift("(");
+        
+       newick=newick+")"+nodeName;
+
+       var pre = graphlib.alg.preorder(graphLibStructure,c[i]);
+       
+        
+
+          if ($("#" + (paper.findViewByModel(pre[1]).id)).find("circle").attr("has-children") == "true")
+          {
+            var d = graphlib.alg.postorder(graphLibStructure,c[i]);
+            var nodeNamee = $("input[model-id=" + d[0] + "]").val();
+            //console.log("first left child is : " ,nodeNamee);
+            
+              Split_Newick=newick.split(nodeNamee);
+              console.log(Split_Newick[0]);
+              console.log(Split_Newick[1]);
+              
+               
+              newick=Split_Newick[0] + "(" + nodeNamee.concat(Split_Newick[1]);
+          }
       }
 
-      //}
 
+    }// first if for i-1 validation ends
 
-
-    }
     //when root is found
     if($("#" + (paper.findViewByModel(c[i]).id)).find("circle").attr("root") == "true")
     { 
       
-      //newick[v].unshift("(");
-    newick=newick+nodeName+")";
-    //insert opening bracket at start
-    newick=opening.concat(newick);
-    }
-    }
-    //newick=newick+")";
+      console.log("5 I am root"); 
+      //newick=opening.concat(newick);
+     //newick=newick + ")";
+    } 
+
+    } //for loop end
+
+   
+   
+   snewick=opening.concat(newick);
+    newick=newick + ")";
     console.log("newick:", newick);
 
-  }
+  } //savetree function ends
 
   

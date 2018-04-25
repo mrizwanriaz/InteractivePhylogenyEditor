@@ -37,6 +37,7 @@
     <script src="js/notify.js"></script>
     <script src="js/functions.js"></script>
     <script src="js/newick.js"></script>
+    <script src="js/dagre/lib/order/index.js"></script>
 
     <title></title>
 
@@ -49,34 +50,34 @@
 
 </head>
 
-<body>
+<body id="body">
 
 
 
 
     <div class="form-horizontal">
         <div class="form-group" id="newickbox_id">
-            <label for="inputType" class="col-sm-2 control-label">Please enter phylogeny:</label>
-            <div class="col-sm-5">
-                <input type="text" placeholder="newick format" class="form-control" id="newick"></input>
-            </div>
-            <div class="col-sm-1">
-                <button onclick="generateGraphFromNewick();" class=" btn btn-primary col-sm-offset-4">Generate Tree</button>
+                <div class="form-inline">
+            <label for="inputType" style="padding-top:0px; padding-left:13px;" class="control-label">Please enter phylogeny:</label>
+            
+                <input type="text" style="margin-left: 5px;" placeholder="newick format" class="form-control newick" id="newick"></input>
+            
+                <button onclick="generateGraphFromNewick();" style="margin-left: 5px;" class=" btn btn-primary ">Generate Tree</button>
                
+                <div class="pull-right">
+                        <button type="button" onclick=""   class=" btn btn-default "><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                        <button type="button" onclick=""  class=" btn btn-default "><i class="fa fa-search-minus" aria-hidden="true"></i></button>
+                        <button type="button" onclick="saveTreeAsNewick();"  class=" btn btn-success ">save</button>
+                        <button type="button" onclick="reset();" style=" margin-right:15px;" class=" btn">reset</button>
+                      </div>
             </div>
         </div>
     </div>
 
-    <br>
 
-    <div class="container">
-        
-        <div class="btn-group col-sm-offset-10">
-          <button type="button" onclick="saveTreeAsNewick();" class="btn btn-success">save</button>
-          <button type="button" onclick="reset();" class="btn btn-danger">reset</button>
-        </div>
-      </div>
-           
+    
+       
+
     
    
    
@@ -85,13 +86,10 @@
         var selNode = null;
 
         
-
         /***************************** context menu******************************/
         $(function () {         
      
             
-
-
             $("#paper-html-elements").contextMenu({
                 selector: '.html-element',
                 
@@ -168,7 +166,7 @@
                         //if a nodes have children then enable add-label option and also disable add and hide-label option
                         else{
                             $("li").removeClass("disableMenuItem").addClass("enableMenuItem");
-                            $("li.fa-edit").removeClass("enableMenuItem").addClass("disableMenuItem");
+                           $("li.fa-edit").removeClass("enableMenuItem").addClass("disableMenuItem");
                             $("li.fa-eye-slash").removeClass("enableMenuItem").addClass("disableMenuItem");
                             }
                                         
@@ -190,12 +188,12 @@
 
         var paper = new joint.dia.Paper({
             el: $('#paper-html-elements'),
-            width: 1200,
+            //width: 1200,
             height: 1200,
             model: graph,
             gridSize: 1,
             background: {
-                color: 'lightgrey'
+                color: 'rgb(247, 243, 243)'
             },
             perpendicularLinks: true,
 

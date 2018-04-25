@@ -1,10 +1,13 @@
-
+#body{
+    background:white;
+}
 #paper-html-elements {
     position: relative;
-    border: 1px solid gray;
+    border: 2px solid steelblue;
     display: inline-block;
     background: transparent;
-    overflow: hidden;
+    overflow: auto;
+    min-width: 100%;
 }
 
 #paper-html-elements svg {
@@ -24,7 +27,7 @@ svg circle{
 
 .html-element {
     position: absolute;
-    background: black;
+    background: lightgray;
     /* Make sure events are propagated to the JointJS element so, e.g. dragging works.
     pointer-events: none;
     -webkit-user-select: none;*/
@@ -61,7 +64,7 @@ svg circle{
 
 .toggle_children{
     font-size: 7px;
-    color:black;
+    color:lightgrey;/* color of button inside the node */
     cursor: pointer;
    top:8px;
    left: 7px;
@@ -70,11 +73,12 @@ svg circle{
 }
 .toggle_children:hover{
    
-    color: white;
+    color: black;
     
 }
 /*input box styling*/
 /* body {text-align:center; padding:20px} */
+/*input box which are with the nodes for organism search*/
 .html-element input {
     background-color: transparent;
     position: absolute;
@@ -111,3 +115,5 @@ body { padding: 040px; }
 .dropdown-toggle .glyphicon { margin-left: 20px; margin-right: -40px }
 .dropdown-menu>li>a:hover { background: #f1f9fd } /* $search-blue */
 .dropdown-header { background: #ccc; font-size: 14px; font-weight: 700; padding-top: 5px; padding-bottom: 5px; margin-top: 10px; margin-bottom: 5px }
+
+
