@@ -509,21 +509,22 @@ function saveTreeAsNewick() {
           
         newick = newick + ")" + nodeName + ",";
         
-        var pre = graphlib.alg.preorder(graphLibStructure,c[i]);
+        var PreOrder = graphlib.alg.preorder(graphLibStructure,c[i]);
        
         
         
-          if ($("#" + (paper.findViewByModel(pre[1]).id)).find("circle").attr("has-children") == "true")
+          if ($("#" + (paper.findViewByModel(PreOrder[1]).id)).find("circle").attr("has-children") == "true")
           {
             var d = graphlib.alg.postorder(graphLibStructure,c[i]);
             var nodeNameD = $("input[model-id=" + d[0] + "]").val();
             console.log("first left child is : " ,nodeNameD);
-              op=newick.split(nodeNameD);
-              console.log(op[0]);
-              console.log(op[1]); 
+            //split newick string into two parts by nodenameD
+            var Split_newick=newick.split(nodeNameD);
+              console.log(Split_newick[0]);
+              console.log(Split_newick[1]); 
               
-             
-              newick=op[0] + "(" + nodeNameD.concat(op[1]);
+             //put an opening after the first part of split string
+              newick=Split_newick[0] + "(" + nodeNameD.concat(Split_newick[1]);
           }
           
       }
@@ -537,17 +538,17 @@ function saveTreeAsNewick() {
         
        newick=newick+")"+nodeName;
 
-       var pre = graphlib.alg.preorder(graphLibStructure,c[i]);
+       var PreOrder = graphlib.alg.preorder(graphLibStructure,c[i]);
        
         
 
-          if ($("#" + (paper.findViewByModel(pre[1]).id)).find("circle").attr("has-children") == "true")
+          if ($("#" + (paper.findViewByModel(PreOrder[1]).id)).find("circle").attr("has-children") == "true")
           {
             var d = graphlib.alg.postorder(graphLibStructure,c[i]);
             var nodeNamee = $("input[model-id=" + d[0] + "]").val();
             //console.log("first left child is : " ,nodeNamee);
             
-              Split_Newick=newick.split(nodeNamee);
+             var Split_Newick=newick.split(nodeNamee);
               console.log(Split_Newick[0]);
               console.log(Split_Newick[1]);
               
@@ -572,7 +573,7 @@ function saveTreeAsNewick() {
 
    
    
-   snewick=opening.concat(newick);
+   newick=opening.concat(newick);
     newick=newick + ")";
     console.log("newick:", newick);
 
