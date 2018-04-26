@@ -63,17 +63,18 @@ svg circle{
 
 
 .toggle_children{
-    font-size: 7px;
+    font-size: 10px;
     color:lightgrey;/* color of button inside the node */
     cursor: pointer;
-   top:8px;
-   left: 7px;
+   top:6px;
+   left: 6px;
    position: absolute;
   
 }
 .toggle_children:hover{
    
-    color: black;
+    color: #212121;
+    
     
 }
 /*input box styling*/

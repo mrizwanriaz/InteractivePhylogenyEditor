@@ -461,6 +461,11 @@ function getOrganismFromDatabase() {
     dataType: 'json',
     success: function (result) {
       availableTags = result;
+      for (i = 0; i < availableTags.length; ++i) {
+        n=availableTags[i];
+        var start = n.search(":");
+        orgCodes.push(n.slice(start+1,-1));
+      }
     },
     type: 'GET'
   });
@@ -468,6 +473,13 @@ function getOrganismFromDatabase() {
 }
 
 function saveTreeAsNewick() {
+  if(validateLeafNodeLabels()!=true)
+  {
+    $("#savebtn").notify("Enter the labels of all leaf nodes !", {
+      position: "top center"
+    }, "error");
+  }
+  else{
   var rootNode = graph.getSources()[0];
   console.log("root",rootNode);
   var graphLibStructure = graph.toGraphLib();
@@ -506,7 +518,7 @@ function saveTreeAsNewick() {
         $("#" + (paper.findViewByModel(c[i + 1]).id)).find("circle").attr("has-children") != "true" )
         
         {
-          
+         //place a closing at the end of current newick string 
         newick = newick + ")" + nodeName + ",";
         
         var PreOrder = graphlib.alg.preorder(graphLibStructure,c[i]);
@@ -544,7 +556,9 @@ function saveTreeAsNewick() {
 
           if ($("#" + (paper.findViewByModel(PreOrder[1]).id)).find("circle").attr("has-children") == "true")
           {
+            //posterorder traversal for the sake of spliting 
             var d = graphlib.alg.postorder(graphLibStructure,c[i]);
+            //d[0]is the last left node of that parent
             var nodeNamee = $("input[model-id=" + d[0] + "]").val();
             //console.log("first left child is : " ,nodeNamee);
             
@@ -566,7 +580,7 @@ function saveTreeAsNewick() {
       
       console.log("5 I am root"); 
       //newick=opening.concat(newick);
-     //newick=newick + ")";
+      //newick=newick + ")";
     } 
 
     } //for loop end
@@ -577,6 +591,24 @@ function saveTreeAsNewick() {
     newick=newick + ")";
     console.log("newick:", newick);
 
+  }//validate for leaf label 
   } //savetree function ends
 
   
+  
+ /*
+ * Check if labels are assigned to all leaf nodes
+ */ 
+  function validateLeafNodeLabels(){
+
+    _valid=true;
+    $("div.leaf > input").each(function(e){ 
+      lab=$(this).val();
+      
+      if (lab.length < 2)
+      {
+        _valid= false;
+      }
+    });
+    return _valid;
+  }
