@@ -64,8 +64,8 @@
                 <button onclick="generateGraphFromNewick();" style="margin-left: 5px;" class=" btn btn-primary ">Generate Tree</button>
                
                 <div class="pull-right">
-                       <!--  <button type="button" onclick=""   class=" btn btn-default "><i class="fa fa-search-plus" aria-hidden="true"></i></button>
-                        <button type="button" onclick=""  class=" btn btn-default "><i class="fa fa-search-minus" aria-hidden="true"></i></button> -->
+                        <button type="button" onclick="validateDuplication();"   class=" btn btn-default "><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                       <!--  <button type="button" onclick=""  class=" btn btn-default "><i class="fa fa-search-minus" aria-hidden="true"></i></button> -->
                         <button type="button" onclick="saveTreeAsNewick();" id="savebtn"  class=" btn btn-success ">save</button>
                         <button type="button" onclick="reset();" style=" margin-right:15px;" class=" btn">reset</button>
                       </div>
@@ -182,6 +182,7 @@
         /*********** organism names binding *********************/
         var availableTags=[];
         var orgCodes=[]; //to sstore organism codes (for validation)
+        var input_newick=$("#newick").val();
         getOrganismFromDatabase();
 
         var graph = new joint.dia.Graph;
@@ -353,6 +354,14 @@
             // -----------------------------------------------------------
             // adding a intial node function call
             intialNodes();
+            
+
+
+
+          
+
+
+
            
            
 

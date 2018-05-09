@@ -1,3 +1,5 @@
+
+
 function reset() {
   graph.resetCells();
   $(".html-element").remove();
@@ -8,7 +10,7 @@ var newickNodes;
 function generateGraphFromNewick() {
 
 
-  //get user value
+  //get input newick value
   var n = $("#newick").val();
   // validate that given string is meeting our minimum string given by user --validation
   if (n.length < 9) {
@@ -46,6 +48,10 @@ function generateGraphFromNewick() {
       buildNewickNodes(newickParsed);
       newickNodes = newickNodes.reverse();
       console.log(newickNodes, "built nodes");
+
+
+     
+
 
       //for the validation of commas in newick input
       var HalfNodes = parseInt(newickNodes.length / 2);
@@ -475,11 +481,19 @@ function getOrganismFromDatabase() {
 function saveTreeAsNewick() {
   if(validateLeafNodeLabels()!=true)
   {
-    $("#savebtn").notify("Enter the labels of all leaf nodes !", {
+    $("#savebtn").notify("Enter the labels from list !", {
+      position: "top center"
+    }, "error");
+  }
+   if(validateDuplication()!=true){
+    $("#savebtn").notify("Do not duplicate the labels !", {
       position: "top center"
     }, "error");
   }
   else{
+
+
+
   var rootNode = graph.getSources()[0];
   console.log("root",rootNode);
   var graphLibStructure = graph.toGraphLib();
@@ -594,21 +608,42 @@ function saveTreeAsNewick() {
   }//validate for leaf label 
   } //savetree function ends
 
-  
-  
- /*
+  /*
  * Check if labels are assigned to all leaf nodes
  */ 
-  function validateLeafNodeLabels(){
+  var leafNodes=[];
+function validateLeafNodeLabels(){
 
-    _valid=true;
-    $("div.leaf > input").each(function(e){ 
-      lab=$(this).val();
-      
-      if (lab.length < 2)
-      {
-        _valid= false;
-      }
-    });
-    return _valid;
-  }
+  _valid=true;
+  var i=0;
+  $("div.leaf > input").each(function(e){ 
+    lab=$(this).val();
+   leafNodes[i]=lab;
+   i++;
+   
+    var a= orgCodes.indexOf(lab);
+    if(a<=0)
+    {
+      _valid= false;
+    }
+   
+  });
+  return _valid;
+}
+  
+
+
+function validateDuplication()
+{
+  
+  for (var i = 0; i < leafNodes.length; i++) {
+     for (var j = i + 1 ; j < leafNodes.length; j++) {
+        if (leafNodes[i]==(leafNodes[j])) { 
+          // got the duplicate element
+          return false;
+         } } }
+
+         return true;
+    
+
+} 
