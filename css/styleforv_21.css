@@ -79,7 +79,7 @@ svg circle{
 }
 /*input box styling*/
 /* body {text-align:center; padding:20px} */
-/*input box which are with the nodes for organism search*/
+/*input box which are with the nodes  (search box)*/
 .html-element input {
     background-color: transparent;
     position: absolute;
@@ -117,4 +117,10 @@ body { padding: 040px; }
 .dropdown-menu>li>a:hover { background: #f1f9fd } /* $search-blue */
 .dropdown-header { background: #ccc; font-size: 14px; font-weight: 700; padding-top: 5px; padding-bottom: 5px; margin-top: 10px; margin-bottom: 5px }
 
-
+/* .html-element button,
+.html-element input:hover {
+    -ms-transform: scale(1.5);  IE 9 
+    -webkit-transform: scale(1.5);  Safari 3-8 
+    transform: scale(1.5,2); 
+}
+ */

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
+    <script src="js/jquery.js"></script>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
@@ -25,10 +25,11 @@
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    
     <script src="js/jquery.contextMenu.js"></script>
     <script src="js/jquery.ui.position.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -64,7 +65,7 @@
                 <button onclick="generateGraphFromNewick();" style="margin-left: 5px;" class=" btn btn-primary ">Generate Tree</button>
                
                 <div class="pull-right">
-                        <button type="button" onclick="validateDuplication();"   class=" btn btn-default "><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                       <!-- <button type="button" onclick="validateDuplication();"   class=" btn btn-default "><i class="fa fa-search-plus" aria-hidden="true"></i></button>
                        <!--  <button type="button" onclick=""  class=" btn btn-default "><i class="fa fa-search-minus" aria-hidden="true"></i></button> -->
                         <button type="button" onclick="saveTreeAsNewick();" id="savebtn"  class=" btn btn-success ">save</button>
                         <button type="button" onclick="reset();" style=" margin-right:15px;" class=" btn">reset</button>
@@ -358,9 +359,6 @@
 
 
 
-          
-
-
 
            
            
@@ -403,6 +401,7 @@
                                 className: 'btn-danger'
                             }
                         },
+                        
                         callback: function (result) {
                             if (result) {
                                 //hide its label                              

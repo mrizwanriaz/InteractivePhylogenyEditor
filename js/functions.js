@@ -1,10 +1,33 @@
 
 
 function reset() {
-  graph.resetCells();
-  $(".html-element").remove();
-  intialNodes();
-}
+
+  bootbox.confirm({
+    message: "Do you really want to Reset?",
+    buttons: {
+      confirm: {
+        label: 'Yes',
+        className: 'btn-success'
+      },
+      cancel: {
+        label: 'No',
+        className: 'btn-danger'
+      },
+    },
+    size: 'small',
+    callback: function (result) {
+      if (result) {
+        graph.resetCells();
+        $(".html-element").remove();
+        intialNodes();
+
+      } //result if end
+      else {
+        return;
+      } //else bracket ends
+    }
+  }); //bootbox end     
+}//resetfunction ends
 var newickNodes;
 
 function generateGraphFromNewick() {
@@ -337,6 +360,7 @@ function removeChildren(currentcell) {
         className: 'btn-danger'
       },
     },
+    size: 'small',
     callback: function (result) {
       if (result) {
         // loop for removing all successor of current cell
@@ -481,7 +505,7 @@ function getOrganismFromDatabase() {
 function saveTreeAsNewick() {
   if(validateLeafNodeLabels()!=true)
   {
-    $("#savebtn").notify("Enter the labels from list !", {
+    $("#savebtn").notify("Enter the labels from KEGG Organism !", {
       position: "top center"
     }, "error");
   }
