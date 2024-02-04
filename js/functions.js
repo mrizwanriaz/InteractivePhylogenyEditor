@@ -503,12 +503,12 @@ function getOrganismFromDatabase() {
 }
 
 function saveTreeAsNewick() {
-  if(validateLeafNodeLabels()!=true)
-  {
-    $("#savebtn").notify("Enter the labels from KEGG Organism !", {
-      position: "top center"
-    }, "error");
-  }
+ // if(validateLeafNodeLabels()!=true)
+ // {
+ //   $("#savebtn").notify("Enter the labels from KEGG Organism !", {
+ //     position: "top center"
+ //   }, "error");
+ // }
    if(validateDuplication()!=true){
     $("#savebtn").notify("Do not duplicate the labels !", {
       position: "top center"
