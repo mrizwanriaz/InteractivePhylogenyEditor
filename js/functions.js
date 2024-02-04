@@ -481,7 +481,7 @@ function intialNodes() {
 
 
 function getOrganismFromDatabase() {
-  var api_url = "http://mapps.lums.edu.pk/api/api/organism/species";
+  var api_url = "<set api URL to fetch organism codes>";
   $.ajax({
     url: api_url,
     async: false,
